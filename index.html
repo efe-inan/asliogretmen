@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aslı Öğretmenin Dersliği</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .login-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .user-type-selector {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .user-type-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .user-type-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .user-type-btn.active {
+            background: linear-gradient(45deg, #00d2d3, #54a0ff);
+        }
+
+        .login-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #54a0ff;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #00d2d3, #54a0ff);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .dashboard {
+            display: none;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .dashboard-header {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .dashboard-title {
+            color: #333;
+            margin: 0;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #ff3742;
+            transform: translateY(-1px);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(45deg, #00d2d3, #54a0ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00d2d3, #54a0ff);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #00d8d6, #55a3ff);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(45deg, #ffa726, #ff7043);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        .close {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .student-item, .assignment-item, .note-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #54a0ff;
+        }
+
+        .grade-input {
+            width: 80px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 0 10px;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .math-formula {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: 'Times New Roman', serif;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2em; }
+            .dashboard-header { flex-direction: column; gap: 15px; }
+            .user-type-selector { flex-direction: column; align-items: center; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Aslı Öğretmenin Dersliği</h1>
+            <p>İnteraktif Matematik Öğrenme Platformu</p>
+        </div>
+
+        <!-- Giriş Sayfası -->
+        <div id="loginSection" class="login-section">
+            <div class="user-type-selector">
+                <button class="user-type-btn active" onclick="selectUserType('teacher')">👩‍🏫 Öğretmen</button>
+                <button class="user-type-btn" onclick="selectUserType('student')">👨‍🎓 Öğrenci</button>
+                <button class="user-type-btn" onclick="selectUserType('parent')">👨‍👩‍👧‍👦 Veli</button>
+            </div>
+
+            <form class="login-form" onsubmit="login(event)">
+                <div class="form-group">
+                    <label for="username">Kullanıcı Adı:</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Şifre:</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="login-btn">Giriş Yap</button>
+            </form>
+        </div>
+
+        <!-- Öğretmen Paneli -->
+        <div id="teacherDashboard" class="dashboard">
+            <div class="dashboard-header">
+                <h2 class="dashboard-title">Hoş geldiniz, Aslı Öğretmen! 👩‍🏫</h2>
+                <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3><span class="card-icon">👥</span>Öğrenci Yönetimi</h3>
+                    <p>Öğrencilerinizi görüntüleyin ve notlarını düzenleyin</p>
+                    <button class="btn btn-primary" onclick="openModal('studentsModal')">Öğrencileri Görüntüle</button>
+                </div>
+
+                <div class="card">
+                    <h3><span class="card-icon">📝</span>Ödev Yönetimi</h3>
+                    <p>Yeni ödev atayın ve mevcut ödevleri yönetin</p>
+                    <button class="btn btn-success" onclick="openModal('assignmentsModal')">Ödev Ata</button>
+                </div>
+
+                <div class="card">
+                    <h3><span class="card-icon">📋</span>Ders Notları</h3>
+                    <p>Ders materyallerini paylaşın</p>
+                    <button class="btn btn-warning" onclick="openModal('notesModal')">Not Ekle</button>
+                </div>
+
+                <div class="card">
+                    <h3><span class="card-icon">💬</span>Veli Bildirimleri</h3>
+                    <p>Velilere öneriler gönderin</p>
+                    <button class="btn btn-primary" onclick="openModal('parentNotesModal')">Bildirim Gönder</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Öğrenci Paneli -->
+        <div id="studentDashboard" class="dashboard">
+            <div class="dashboard-header">
+                <h2 class="dashboard-title">Hoş geldin, Öğrenci! 👨‍🎓</h2>
+                <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3><span class="card-icon">📚</span>Ödevlerim</h3>
+                    <div id="studentAssignments">
+                        <div class="assignment-item">
+                            <strong>Cebirsel İfadeler - Ödev 1</strong><br>
+                            <span>Teslim Tarihi: 15 Aralık 2024</span><br>
+                            <span style="color: #e74c3c;">Durum: Teslim Edilmedi</span>
+                        </div>
+                        <div class="assignment-item">
+                            <strong>Geometri - Alan Hesaplamaları</strong><br>
+                            <span>Teslim Tarihi: 12 Aralık 2024</span><br>
+                            <span style="color: #27ae60;">Durum: Teslim Edildi</span><br>
+                            <span>Not: 85/100</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="card-icon">📖</span>Ders Notları</h3>
+                    <div id="studentNotes">
+                        <div class="note-item">
+                            <strong>Cebirsel İfadeler</strong><br>
+                            <div class="math-formula">ax + b = c formülü</div>
+                            <p>Bu hafta cebirsel ifadeleri öğreniyoruz...</p>
+                        </div>
+                        <div class="note-item">
+                            <strong>Geometri - Alan Formülleri</strong><br>
+                            <div class="math-formula">Alan = π × r²</div>
+                            <p>Daire alanı hesaplama formülü...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="card-icon">📊</span>Notlarım</h3>
+                    <div>
+                        <p><strong>Matematik Ortalaması:</strong> <span style="color: #27ae60; font-size: 1.2em;">78</span></p>
+                        <p>Son Sınav: 82</p>
+                        <p>Ödev Ortalaması: 75</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Veli Paneli -->
+        <div id="parentDashboard" class="dashboard">
+            <div class="dashboard-header">
+                <h2 class="dashboard-title">Veli Paneli 👨‍👩‍👧‍👦</h2>
+                <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3><span class="card-icon">👨‍🎓</span>Çocuğumun Durumu</h3>
+                    <div>
+                        <p><strong>Öğrenci:</strong> Ahmet Yılmaz</p>
+                        <p><strong>Matematik Notu:</strong> <span style="color: #27ae60;">78</span></p>
+                        <p><strong>Son Sınav:</strong> 82</p>
+                        <p><strong>Devam Durumu:</strong> %95</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="card-icon">💡</span>Öğretmen Önerileri</h3>
+                    <div>
+                        <div class="assignment-item" style="border-left-color: #f39c12;">
+                            <strong>Cebirsel İfadeler</strong><br>
+                            <p>Çocuğunuzun cebirsel ifadelere daha çok odaklanması gerekiyor. Ev çalışmalarında bu konuya ağırlık vermenizi öneririm.</p>
+                        </div>
+                        <div class="assignment-item" style="border-left-color: #27ae60;">
+                            <strong>Geometri</strong><br>
+                            <p>Geometri konusunda oldukça başarılı. Bu alandaki çalışmalarını sürdürmesini öneriyorum.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="card-icon">📋</span>Yaklaşan Ödevler</h3>
+                    <div>
+                        <div class="assignment-item">
+                            <strong>Cebirsel İfadeler - Ödev 1</strong><br>
+                            <span style="color: #e74c3c;">Teslim Tarihi: 15 Aralık 2024</span><br>
+                            <span>Durum: Henüz Teslim Edilmedi</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Pencereler -->
+    
+    <!-- Öğrenci Modal -->
+    <div id="studentsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('studentsModal')">&times;</span>
+            <h2>Öğrenci Listesi</h2>
+            <div id="studentsList">
+                <div class="student-item">
+                    <strong>Ahmet Yılmaz</strong><br>
+                    Not: <input type="number" class="grade-input" value="78" min="0" max="100">
+                    <button class="btn btn-success" onclick="updateGrade()">Güncelle</button>
+                </div>
+                <div class="student-item">
+                    <strong>Ayşe Demir</strong><br>
+                    Not: <input type="number" class="grade-input" value="92" min="0" max="100">
+                    <button class="btn btn-success" onclick="updateGrade()">Güncelle</button>
+                </div>
+                <div class="student-item">
+                    <strong>Mehmet Kaya</strong><br>
+                    Not: <input type="number" class="grade-input" value="65" min="0" max="100">
+                    <button class="btn btn-success" onclick="updateGrade()">Güncelle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ödev Modal -->
+    <div id="assignmentsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('assignmentsModal')">&times;</span>
+            <h2>Yeni Ödev Ata</h2>
+            <form>
+                <div class="form-group">
+                    <label>Ödev Başlığı:</label>
+                    <input type="text" placeholder="Örn: Cebirsel İfadeler - Ödev 2">
+                </div>
+                <div class="form-group">
+                    <label>Açıklama:</label>
+                    <textarea rows="4" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" placeholder="Ödev açıklamasını buraya yazın..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Teslim Tarihi:</label>
+                    <input type="date">
+                </div>
+                <button type="button" class="btn btn-success" onclick="addAssignment()">Ödevi Kaydet</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Not Modal -->
+    <div id="notesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('notesModal')">&times;</span>
+            <h2>Ders Notu Ekle</h2>
+            <form>
+                <div class="form-group">
+                    <label>Konu Başlığı:</label>
+                    <input type="text" placeholder="Örn: Trigonometri - Sinüs Teoremi">
+                </div>
+                <div class="form-group">
+                    <label>İçerik:</label>
+                    <textarea rows="6" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" placeholder="Ders notunuzun içeriğini buraya yazın..."></textarea>
+                </div>
+                <button type="button" class="btn btn-success" onclick="addNote()">Notu Kaydet</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Veli Bildirim Modal -->
+    <div id="parentNotesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('parentNotesModal')">&times;</span>
+            <h2>Veliye Bildirim Gönder</h2>
+            <form>
+                <div class="form-group">
+                    <label>Öğrenci Seç:</label>
+                    <select style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <option>Ahmet Yılmaz</option>
+                        <option>Ayşe Demir</option>
+                        <option>Mehmet Kaya</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Konu:</label>
+                    <input type="text" placeholder="Örn: Cebirsel İfadeler">
+                </div>
+                <div class="form-group">
+                    <label>Öneri/Bildirim:</label>
+                    <textarea rows="4" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" placeholder="Veliye iletmek istediğiniz öneri veya bildirimi yazın..."></textarea>
+                </div>
+                <button type="button" class="btn btn-success" onclick="sendParentNote()">Bildirimi Gönder</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = 'teacher';
+        let userData = {
+            teacher: { username: 'asli.ogretmen', password: '123456' },
+            student: { username: 'ahmet.yilmaz', password: '123456' },
+            parent: { username: 'ahmet.veli', password: '123456' }
+        };
+
+        function selectUserType(userType) {
+            currentUser = userType;
+            document.querySelectorAll('.user-type-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Placeholder metinlerini güncelle
+            const usernameInput = document.getElementById('username');
+            const placeholders = {
+                teacher: 'asli.ogretmen',
+                student: 'ahmet.yilmaz', 
+                parent: 'ahmet.veli'
+            };
+            usernameInput.placeholder = placeholders[userType];
+        }
+
+        function login(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === userData[currentUser].username && password === userData[currentUser].password) {
+                document.getElementById('loginSection').style.display = 'none';
+                
+                // Tüm dashboard'ları gizle
+                document.querySelectorAll('.dashboard').forEach(dash => {
+                    dash.style.display = 'none';
+                });
+                
+                // İlgili dashboard'ı göster
+                document.getElementById(currentUser + 'Dashboard').style.display = 'block';
+                
+                showMessage('Giriş başarılı!', 'success');
+            } else {
+                showMessage('Kullanıcı adı veya şifre hatalı!', 'error');
+            }
+        }
+
+        function logout() {
+            document.querySelectorAll('.dashboard').forEach(dash => {
+                dash.style.display = 'none';
+            });
+            document.getElementById('loginSection').style.display = 'block';
+            
+            // Formu temizle
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            
+            showMessage('Çıkış yapıldı!', 'info');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function updateGrade() {
+            showMessage('Not başarıyla güncellendi!', 'success');
+            closeModal('studentsModal');
+        }
+
+        function addAssignment() {
+            showMessage('Ödev başarıyla eklendi!', 'success');
+            closeModal('assignmentsModal');
+        }
+
+        function addNote() {
+            showMessage('Ders notu başarıyla eklendi!', 'success');
+            closeModal('notesModal');
+        }
+
+        function sendParentNote() {
+            showMessage('Veli bildirimi başarıyla gönderildi!', 'success');
+            closeModal('parentNotesModal');
+        }
+
+        function showMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                border-radius: 10px;
+                color: white;
+                font-weight: bold;
+                z-index: 1001;
+                animation: slideInRight 0.5s ease-out;
+            `;
+            
+            const colors = {
+                success: '#27ae60',
+                error: '#e74c3c',
+                info: '#3498db'
+            };
+            
+            messageDiv.style.backgroundColor = colors[type] || colors.info;
+            messageDiv.textContent = message;
+            
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.style.animation = 'slideOutRight 0.5s ease-out';
+                setTimeout(() => {
+                    document.body.removeChild(messageDiv);
+                }, 500);
+            }, 3000);
+        }
+
+        // Modal dışına tıklandığında kapat
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Sayfa yüklendiğinde animasyonları başlat
+        window.addEventListener('load', function() {
+            document.body.style.animation = 'fadeIn 1s ease-out';
+        });
+    </script>
+
+    <style>
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</body>
+</html>
